@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.glue;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,8 @@ public class SuperGlueRemovalPacket extends SimplePacketBase {
 				return;
 			double range = 32;
 			if (player.distanceToSqr(superGlue.position()) > range * range)
+				return;
+			if(!GriefDefenderUtils.canUse(player,player.level,superGlue.blockPosition()))
 				return;
 			AllSoundEvents.SLIME_ADDED.play(player.level(), null, soundSource, 0.5F, 0.5F);
 			superGlue.spawnParticles();

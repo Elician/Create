@@ -3,11 +3,14 @@ package com.simibubi.create.foundation.blockEntity.behaviour.inventory;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+
+import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -41,7 +44,7 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 		super(be, target);
 		behaviourType = type;
 	}
-	
+
 	@Override
 	protected Capability<IItemHandler> capability() {
 		return ForgeCapabilities.ITEM_HANDLER;
@@ -64,7 +67,9 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 		IItemHandler inventory = targetCapability.orElse(null);
 		if (inventory == null)
 			return ItemStack.EMPTY;
-
+		BlockFace targetBlockFace = target.getTarget(getWorld(), blockEntity.getBlockPos(), blockEntity.getBlockState());
+		if(!GriefDefenderUtils.canInteract(getWorld(),blockEntity.getBlockPos(),targetBlockFace.getConnectedPos()))
+			return ItemStack.EMPTY;
 		Predicate<ItemStack> test = getFilterTest(filter);
 		ItemStack simulatedItems = ItemHelper.extract(inventory, test, mode, amount, true);
 		if (shouldSimulate || simulatedItems.isEmpty())

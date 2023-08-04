@@ -182,6 +182,10 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
+    compileOnly name: 'api-2.1.0-20220608.043832-6'
+    compileOnly name: 'common'
+    compileOnly name: 'griefdefender-bukkit-2.3.9'
+    compileOnly name: 'griefdefender-bukkit-2.3.9-inner'
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${curios_minecraft_version}:api")
@@ -266,8 +270,8 @@ task jarJarRelease {
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
+    //withSourcesJar()
+    //withJavadocJar()
 }
 
 void addLicense(jarTask) {

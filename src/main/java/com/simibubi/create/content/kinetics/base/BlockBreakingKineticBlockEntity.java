@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.base;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -125,7 +126,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 	}
 
 	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
-		return isBreakable(stateToBreak, blockHardness);
+		return GriefDefenderUtils.canInteract(level,getBlockPos(),getBreakingPos()) && isBreakable(stateToBreak, blockHardness);
 	}
 
 	public static boolean isBreakable(BlockState stateToBreak, float blockHardness) {
@@ -142,7 +143,7 @@ public abstract class BlockBreakingKineticBlockEntity extends KineticBlockEntity
 				return;
 			if (level.restoringBlockSnapshots)
 				return;
-			
+
 			ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
 			itementity.setDefaultPickUpDelay();
 			itementity.setDeltaMovement(Vec3.ZERO);

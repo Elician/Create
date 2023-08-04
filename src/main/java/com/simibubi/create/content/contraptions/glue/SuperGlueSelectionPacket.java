@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.glue;
 
 import java.util.Set;
 
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -53,13 +54,14 @@ public class SuperGlueSelectionPacket extends SimplePacketBase {
 				return;
 			if (!SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, true))
 				return;
-
+			if(!GriefDefenderUtils.canUse(player,player.level,to)||!GriefDefenderUtils.canUse(player,player.level,from))
+				return;
 			AABB bb = SuperGlueEntity.span(from, to);
 			SuperGlueSelectionHelper.collectGlueFromInventory(player, 1, false);
 			SuperGlueEntity entity = new SuperGlueEntity(player.level(), bb);
 			player.level().addFreshEntity(entity);
 			entity.spawnParticles();
-			
+
 			AllAdvancements.SUPER_GLUE.awardTo(player);
 		});
 		return true;

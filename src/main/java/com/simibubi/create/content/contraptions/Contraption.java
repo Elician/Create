@@ -21,6 +21,8 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -307,6 +309,8 @@ public abstract class Contraption {
 			return false;
 		visited.add(pos);
 
+		if(!GriefDefenderUtils.canInteract(world,pos,anchor))
+			return true;
 		if (world.isOutsideBuildHeight(pos))
 			return true;
 		if (!world.isLoaded(pos))
@@ -1042,10 +1046,9 @@ public abstract class Contraption {
 							targetPos.relative(face));
 
 				BlockState blockState = world.getBlockState(targetPos);
-				if (blockState.getDestroySpeed(world, targetPos) == -1 || (state.getCollisionShape(world, targetPos)
-					.isEmpty()
-					&& !blockState.getCollisionShape(world, targetPos)
-						.isEmpty())) {
+				if (blockState.getDestroySpeed(world, targetPos) == -1 ||
+						(state.getCollisionShape(world, targetPos).isEmpty() && !blockState.getCollisionShape(world, targetPos).isEmpty())
+				|| !GriefDefenderUtils.canInteract(world, anchor ,targetPos)) {
 					if (targetPos.getY() == world.getMinBuildHeight())
 						targetPos = targetPos.above();
 					world.levelEvent(2001, targetPos, Block.getId(state));
@@ -1156,14 +1159,14 @@ public abstract class Contraption {
 			if (behaviour != null)
 				behaviour.startMoving(context);
 			pair.setRight(context);
-			if (behaviour instanceof ContraptionControlsMovement) 
+			if (behaviour instanceof ContraptionControlsMovement)
 				disableActorOnStart(context);
 		}
 
 		for (ItemStack stack : disabledActors)
 			setActorsActive(stack, false);
 	}
-	
+
 	protected void disableActorOnStart(MovementContext context) {
 		if (!ContraptionControlsMovement.isDisabledInitially(context))
 			return;

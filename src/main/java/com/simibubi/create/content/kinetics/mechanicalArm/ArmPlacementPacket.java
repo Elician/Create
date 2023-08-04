@@ -2,6 +2,7 @@ package com.simibubi.create.content.kinetics.mechanicalArm;
 
 import java.util.Collection;
 
+import com.simibubi.create.compat.griefdefender.GriefDefenderUtils;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.core.BlockPos;
@@ -57,7 +58,13 @@ public class ArmPlacementPacket extends SimplePacketBase {
 			BlockEntity blockEntity = world.getBlockEntity(pos);
 			if (!(blockEntity instanceof ArmBlockEntity))
 				return;
-
+			for (Tag inbt : receivedTag) {
+				ArmInteractionPoint point = ArmInteractionPoint.deserialize((CompoundTag) inbt,world, pos);
+				if (point == null)
+					continue;
+				if(!GriefDefenderUtils.canInteract(world,pos,point.pos))
+					receivedTag.remove(inbt);
+			}
 			ArmBlockEntity arm = (ArmBlockEntity) blockEntity;
 			arm.interactionPointTag = receivedTag;
 		});
